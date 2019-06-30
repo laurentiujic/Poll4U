@@ -1,10 +1,14 @@
 package org.x1c1b.poll4u.service.impl;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.x1c1b.poll4u.dto.RegistrationDTO;
+import org.x1c1b.poll4u.dto.UserDTO;
+import org.x1c1b.poll4u.dto.UserUpdateDTO;
 import org.x1c1b.poll4u.error.BadRequestException;
 import org.x1c1b.poll4u.error.ResourceNotFoundException;
 import org.x1c1b.poll4u.model.Role;
@@ -24,54 +28,63 @@ public class UserServiceImpl implements UserService {
     private UserRepository userRepository;
     private RoleRepository roleRepository;
     private PasswordEncoder passwordEncoder;
+    private ModelMapper modelMapper;
 
     @Autowired
-    public UserServiceImpl(UserRepository userRepository, RoleRepository roleRepository, PasswordEncoder passwordEncoder) {
+    public UserServiceImpl(UserRepository userRepository,
+                           RoleRepository roleRepository,
+                           PasswordEncoder passwordEncoder,
+                           ModelMapper modelMapper) {
 
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
         this.passwordEncoder = passwordEncoder;
+        this.modelMapper = modelMapper;
     }
 
     @Override
-    public List<User> findAll() {
+    public List<UserDTO> findAll() {
 
         return StreamSupport.stream(userRepository.findAll().spliterator(), false)
+                .map(user -> modelMapper.map(user, UserDTO.class))
                 .collect(Collectors.toList());
     }
 
     @Override
-    public Page<User> findAll(Pageable pageable) {
+    public Page<UserDTO> findAll(Pageable pageable) {
 
-        return userRepository.findAll(pageable);
+        return userRepository.findAll(pageable).map((user) -> modelMapper.map(user, UserDTO.class));
     }
 
     @Override
-    public User findById(Long id) {
+    public UserDTO findById(Long id) {
 
-        return userRepository.findById(id).orElseThrow(
-                () -> new ResourceNotFoundException("No user with such identifier found"));
+        return modelMapper.map(userRepository.findById(id).orElseThrow(
+                () -> new ResourceNotFoundException("No user with such identifier found")),
+                UserDTO.class);
     }
 
     @Override
-    public User findByUsername(String username) {
+    public UserDTO findByUsername(String username) {
 
-        return userRepository.findByUsername(username).orElseThrow(
-                () -> new ResourceNotFoundException("No user with such username found"));
+        return modelMapper.map(userRepository.findByUsername(username).orElseThrow(
+                () -> new ResourceNotFoundException("No user with such username found")),
+                UserDTO.class);
     }
 
     @Override
-    public User findByEmail(String email) {
+    public UserDTO findByEmail(String email) {
 
-        return userRepository.findByEmail(email).orElseThrow(
-                () -> new ResourceNotFoundException("No user with such email address found"));
+        return modelMapper.map(userRepository.findByEmail(email).orElseThrow(
+                () -> new ResourceNotFoundException("No user with such email found")),
+                UserDTO.class);
     }
 
     @Override
-    public User create(User user) {
+    public UserDTO create(RegistrationDTO registration) {
 
-        boolean isNamePresent = userRepository.findByUsername(user.getUsername()).isPresent();
-        boolean isEmailPresent = userRepository.findByEmail(user.getEmail()).isPresent();
+        boolean isNamePresent = userRepository.findByUsername(registration.getUsername()).isPresent();
+        boolean isEmailPresent = userRepository.findByEmail(registration.getEmail()).isPresent();
 
         if(isNamePresent) throw new BadRequestException("Username is already present");
         if(isEmailPresent) throw new BadRequestException("Email is already in use");
@@ -79,14 +92,16 @@ public class UserServiceImpl implements UserService {
         Role role = roleRepository.findByName(Role.RoleName.ROLE_USER).orElseThrow(
                 () -> new ResourceNotFoundException("No such role found"));
 
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        User user = modelMapper.map(registration, User.class);
+
+        user.setPassword(passwordEncoder.encode(registration.getPassword()));
         user.setRoles(Collections.singleton(role));
 
-        return userRepository.save(user);
+        return modelMapper.map(userRepository.save(user), UserDTO.class);
     }
 
     @Override
-    public User updateById(Long id, User update) {
+    public UserDTO updateById(Long id, UserUpdateDTO update) {
 
         User user = userRepository.findById(id).orElseThrow(
                 () -> new ResourceNotFoundException("No user with such identifier found"));
@@ -99,10 +114,13 @@ public class UserServiceImpl implements UserService {
         fields of entity. Just update partially the updatable fields.
          */
 
-        user.setEmail(update.getEmail());
-        user.setPassword(passwordEncoder.encode(update.getPassword()));
+        if(!user.getId().equals(update.getId())) throw new BadRequestException("Identifier isn't mutable");
+        if(!user.getUsername().equals(update.getUsername())) throw new BadRequestException("Username isn't mutable");
 
-        return userRepository.save(user);
+        user.setPassword(passwordEncoder.encode(update.getPassword()));
+        user.setEmail(update.getEmail());
+
+        return modelMapper.map(userRepository.save(user), UserDTO.class);
     }
 
     @Override

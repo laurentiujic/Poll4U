@@ -5,7 +5,10 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
+import org.modelmapper.ModelMapper;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.x1c1b.poll4u.dto.RegistrationDTO;
+import org.x1c1b.poll4u.dto.UserUpdateDTO;
 import org.x1c1b.poll4u.error.BadRequestException;
 import org.x1c1b.poll4u.error.ResourceNotFoundException;
 import org.x1c1b.poll4u.model.User;
@@ -25,66 +28,69 @@ public class UserServiceImplTest {
     @Mock private UserRepository userRepository;
     @Mock private RoleRepository roleRepository;
     @Mock private PasswordEncoder passwordEncoder;
+    @Mock private ModelMapper modelMapper;
 
     private UserService service;
 
     @Before
     public void setUp() {
 
-        service = new UserServiceImpl(userRepository, roleRepository, passwordEncoder);
+        service = new UserServiceImpl(userRepository, roleRepository, passwordEncoder, modelMapper);
     }
 
     @Test(expected = BadRequestException.class)
     public void createUserWithExistingEmail() {
 
-        User user = new User();
-        user.setUsername("user");
-        user.setUsername("user@web.de");
-        user.setPassword("Abc123");
+        RegistrationDTO registration = new RegistrationDTO();
+        registration.setUsername("user");
+        registration.setUsername("user@web.de");
+        registration.setPassword("Abc123");
 
         when(userRepository.findByUsername(any())).thenReturn(Optional.empty());
-        when(userRepository.findByEmail(any())).thenReturn(Optional.of(user));
+        when(userRepository.findByEmail(any())).thenReturn(Optional.of(new User()));
 
-        service.create(user);
+        service.create(registration);
     }
 
     @Test(expected = BadRequestException.class)
     public void createUserWithExistingUsername() {
 
-        User user = new User();
-        user.setUsername("user");
-        user.setUsername("user@web.de");
-        user.setPassword("Abc123");
+        RegistrationDTO registration = new RegistrationDTO();
+        registration.setUsername("user");
+        registration.setUsername("user@web.de");
+        registration.setPassword("Abc123");
 
-        when(userRepository.findByUsername(any())).thenReturn(Optional.of(user));
+        when(userRepository.findByUsername(any())).thenReturn(Optional.of(new User()));
 
-        service.create(user);
+        service.create(registration);
     }
 
     @Test(expected = BadRequestException.class)
     public void updateWithExistingEmail() {
 
-        User user = new User();
-        user.setUsername("user");
-        user.setUsername("user@web.de");
-        user.setPassword("Abc123");
+        UserUpdateDTO update = new UserUpdateDTO();
+        update.setId(1L);
+        update.setUsername("user");
+        update.setUsername("user@web.de");
+        update.setPassword("Abc123");
 
-        when(userRepository.findById(any())).thenReturn(Optional.of(user));
-        when(userRepository.findByEmail(any())).thenReturn(Optional.of(user));
+        when(userRepository.findById(any())).thenReturn(Optional.of(new User()));
+        when(userRepository.findByEmail(any())).thenReturn(Optional.of(new User()));
 
-        service.updateById(1L, user);
+        service.updateById(1L, update);
     }
 
     @Test(expected = ResourceNotFoundException.class)
     public void updateNonExisting() {
 
-        User user = new User();
-        user.setUsername("user");
-        user.setUsername("user@web.de");
-        user.setPassword("Abc123");
+        UserUpdateDTO update = new UserUpdateDTO();
+        update.setId(1L);
+        update.setUsername("user");
+        update.setUsername("user@web.de");
+        update.setPassword("Abc123");
 
         when(userRepository.findById(any())).thenReturn(Optional.empty());
 
-        service.updateById(1L, user);
+        service.updateById(1L, update);
     }
 }
