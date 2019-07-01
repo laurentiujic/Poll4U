@@ -11,9 +11,11 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.x1c1b.poll4u.JsonUtils;
+import org.x1c1b.poll4u.WithMockUserDetails;
 import org.x1c1b.poll4u.dto.RegistrationDTO;
 import org.x1c1b.poll4u.dto.UserDTO;
 import org.x1c1b.poll4u.dto.UserUpdateDTO;
+import org.x1c1b.poll4u.security.UserPrincipalService;
 import org.x1c1b.poll4u.service.UserService;
 
 import java.util.Collections;
@@ -34,6 +36,7 @@ public class UserControllerTest {
 
     @Autowired private MockMvc mvc;
     @MockBean private UserService userService;
+    @MockBean private UserPrincipalService principalService;
 
     @Test public void findAll() throws Exception {
 
@@ -91,7 +94,9 @@ public class UserControllerTest {
                 .andExpect(jsonPath("$.email", is(user.getEmail())));
     }
 
-    @Test public void updateById() throws Exception {
+    @Test
+    @WithMockUserDetails
+    public void updateById() throws Exception {
 
         UserDTO user = new UserDTO(1L, "user","user@web.de", "Abc123");
         UserUpdateDTO update = new UserUpdateDTO(1L, "user","user@web.de", "Abc123");
@@ -109,7 +114,9 @@ public class UserControllerTest {
                 .andExpect(jsonPath("$.email", is(user.getEmail())));
     }
 
-    @Test public void deleteById() throws Exception {
+    @Test
+    @WithMockUserDetails
+    public void deleteById() throws Exception {
 
         willDoNothing().given(userService).deleteById(any());
 

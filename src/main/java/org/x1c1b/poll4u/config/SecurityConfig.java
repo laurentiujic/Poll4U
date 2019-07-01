@@ -30,8 +30,7 @@ import org.x1c1b.poll4u.web.filter.TokenAuthenticationFilter;
 @ComponentScan("org.x1c1b.poll4u.security")
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
-    @Autowired UserPrincipalService principalService;
-    @Autowired private TokenAuthenticationEntryPoint unauthorizedHandler;
+    @Autowired private UserPrincipalService principalService;
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -43,6 +42,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     public TokenAuthenticationFilter tokenAuthenticationFilter() {
 
         return new TokenAuthenticationFilter();
+    }
+
+    @Bean public TokenAuthenticationEntryPoint tokenAuthenticationEntryPoint() {
+
+        return new TokenAuthenticationEntryPoint();
     }
 
     @Bean(BeanIds.AUTHENTICATION_MANAGER)
@@ -67,7 +71,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .csrf()
                     .disable()
                 .exceptionHandling()
-                    .authenticationEntryPoint(unauthorizedHandler)
+                    .authenticationEntryPoint(tokenAuthenticationEntryPoint())
                     .and()
                 .sessionManagement()
                     .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
