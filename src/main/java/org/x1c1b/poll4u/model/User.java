@@ -23,7 +23,6 @@ public class User {
     @Size(min = 4, max = 15, message = "Should consist out of minimum 4 and maxmum 15 characters")
     private String username;
 
-    @NaturalId
     @Email(message = "Should be a valid email address")
     @Size(max = 100, message = "Should contains not more than 100 characters")
     @NotNull(message = "Email is required")

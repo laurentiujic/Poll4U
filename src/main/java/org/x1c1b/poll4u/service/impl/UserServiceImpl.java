@@ -106,7 +106,7 @@ public class UserServiceImpl implements UserService {
         User user = userRepository.findById(id).orElseThrow(
                 () -> new ResourceNotFoundException("No user with such identifier found"));
 
-        boolean isEmailPresent = userRepository.findByEmail(user.getEmail()).isPresent();
+        boolean isEmailPresent = userRepository.findByEmail(update.getEmail()).isPresent();
         if(isEmailPresent) throw new BadRequestException("Email is already in use");
 
         /*
