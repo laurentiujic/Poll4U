@@ -1,4 +1,4 @@
-package org.x1c1b.poll4u.web.filter;
+package org.x1c1b.poll4u.web.auth;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
