@@ -1,11 +1,10 @@
 package org.x1c1b.poll4u.model;
 
-import org.hibernate.annotations.NaturalId;
-
 import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.util.HashSet;
 import java.util.Set;
 
 @Entity
@@ -38,9 +37,14 @@ public class User {
             inverseJoinColumns = @JoinColumn(name = "role_id"))
     private Set<Role> roles;
 
-    public User() { }
+    public User() {
+
+        this.roles = new HashSet<>();
+    }
 
     public User(String username, String email, String password) {
+
+        this();
 
         this.username = username;
         this.email = email;
