@@ -4,7 +4,6 @@ import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.Before;
 import org.junit.Test;
 import org.modelmapper.ModelMapper;
-import org.x1c1b.poll4u.model.User;
 
 import javax.validation.ConstraintViolation;
 import javax.validation.Validation;

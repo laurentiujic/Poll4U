@@ -3,8 +3,6 @@ package org.x1c1b.poll4u.model;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-import java.util.ArrayList;
-import java.util.List;
 
 @Entity
 @Table(name = "choices")
@@ -22,18 +20,9 @@ public class Choice {
     @JoinColumn(name = "poll_id", nullable = false)
     private Poll poll;
 
-    @OneToMany(mappedBy = "choice", cascade = CascadeType.ALL,
-            fetch = FetchType.LAZY)
-    private List<Vote> votes;
-
-    public Choice() {
-
-        this.votes = new ArrayList<>();
-    }
+    public Choice() { }
 
     public Choice(String description) {
-
-        this();
 
         this.description = description;
     }
@@ -60,25 +49,5 @@ public class Choice {
 
     public void setPoll(Poll poll) {
         this.poll = poll;
-    }
-
-    public List<Vote> getVotes() {
-        return votes;
-    }
-
-    public void setVotes(List<Vote> votes) {
-        this.votes = votes;
-    }
-
-    public void addVote(Vote vote) {
-
-        this.votes.add(vote);
-        vote.setChoice(this);
-    }
-
-    public void removeVote(Vote vote) {
-
-        this.votes.remove(vote);
-        vote.setChoice(null);
     }
 }
