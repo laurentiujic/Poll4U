@@ -8,11 +8,13 @@ import org.springframework.stereotype.Service;
 import org.x1c1b.poll4u.dto.PollCreationDTO;
 import org.x1c1b.poll4u.dto.PollDTO;
 import org.x1c1b.poll4u.error.ResourceNotFoundException;
+import org.x1c1b.poll4u.model.Choice;
 import org.x1c1b.poll4u.model.Poll;
 import org.x1c1b.poll4u.repository.PollRepository;
 import org.x1c1b.poll4u.service.PollService;
 
 import java.util.List;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
@@ -62,6 +64,7 @@ public class PollServiceImpl implements PollService {
     public PollDTO create(PollCreationDTO creation) {
 
         Poll poll = modelMapper.map(creation, Poll.class);
+        poll.getChoices().forEach(choice -> choice.setPoll(poll));
 
         return modelMapper.map(pollRepository.save(poll), PollDTO.class);
     }
