@@ -22,11 +22,7 @@ import org.x1c1b.poll4u.web.auth.TokenAuthenticationFilter;
 
 @Configuration
 @EnableWebSecurity
-@EnableGlobalMethodSecurity(
-        securedEnabled = true,
-        jsr250Enabled = true,
-        prePostEnabled = true
-)
+@EnableGlobalMethodSecurity(prePostEnabled = true)
 @ComponentScan("org.x1c1b.poll4u.security")
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 

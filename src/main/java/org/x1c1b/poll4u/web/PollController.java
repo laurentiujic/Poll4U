@@ -5,6 +5,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import org.x1c1b.poll4u.dto.PollCreationDTO;
@@ -42,6 +43,7 @@ public class PollController {
 
     @PostMapping
     @ResponseBody
+    @PreAuthorize("hasRole('ROLE_USER')")
     public ResponseEntity<PollDTO> create(@Valid @RequestBody PollCreationDTO creation) {
 
         PollDTO poll = pollService.create(creation);
@@ -54,6 +56,7 @@ public class PollController {
 
     @DeleteMapping("/{id}")
     @ResponseBody
+    @PreAuthorize("hasRole('ROLE_ADMIN') or @authorization.isPollCreator(authentication, #id)")
     public ResponseEntity<PollDTO> deleteById(@PathVariable("id") Long id) {
 
         pollService.deleteById(id);
