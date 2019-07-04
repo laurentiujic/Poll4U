@@ -1,5 +1,6 @@
 package org.x1c1b.poll4u.web;
 
+import io.swagger.annotations.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -17,6 +18,7 @@ import java.net.URI;
 
 @RestController
 @RequestMapping("/users")
+@Api(tags = {"users"})
 public class UserController {
 
     private UserService userService;
@@ -29,6 +31,10 @@ public class UserController {
 
     @GetMapping
     @ResponseBody
+    @ApiOperation(value = "Get all user accounts")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Successfully fetched accounts")
+    })
     public ResponseEntity<Page<UserDTO>> findAll(@PageableDefault Pageable pageable) {
 
         return ResponseEntity.ok(userService.findAll(pageable));
@@ -36,6 +42,11 @@ public class UserController {
 
     @GetMapping("/{id}")
     @ResponseBody
+    @ApiOperation(value = "Get single user account")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Successfully fetched account"),
+            @ApiResponse(code = 404, message = "Account doesn't exist")
+    })
     public ResponseEntity<UserDTO> findById(@PathVariable("id") Long id) {
 
         return ResponseEntity.ok(userService.findById(id));
@@ -43,6 +54,11 @@ public class UserController {
 
     @PostMapping
     @ResponseBody
+    @ApiOperation(value = "Create new user account")
+    @ApiResponses(value = {
+            @ApiResponse(code = 201, message = "Successfully created account"),
+            @ApiResponse(code = 400, message = "Validation failed, invalid model provided")
+    })
     public ResponseEntity<UserDTO> create(@Valid @RequestBody RegistrationDTO registration) {
 
         UserDTO user = userService.create(registration);
@@ -55,6 +71,14 @@ public class UserController {
 
     @PutMapping("/{id}")
     @ResponseBody
+    @ApiOperation(value = "Update account of current user", authorizations = {@Authorization("Bearer")})
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Successfully updated account"),
+            @ApiResponse(code = 404, message = "Account doesn't exist"),
+            @ApiResponse(code = 400, message = "Validation failed, invalid model provided"),
+            @ApiResponse(code = 401, message = "Unauthenticated access, authentication required"),
+            @ApiResponse(code = 403, message = "Missing privileges, access denied")
+    })
     public ResponseEntity<UserDTO> updateById(@PathVariable("id") Long id, @Valid @RequestBody UserUpdateDTO update) {
 
         return ResponseEntity.ok(userService.updateById(id, update));
@@ -62,6 +86,13 @@ public class UserController {
 
     @DeleteMapping("/{id}")
     @ResponseBody
+    @ApiOperation(value = "Delete account of current user", authorizations = {@Authorization("Bearer")})
+    @ApiResponses(value = {
+            @ApiResponse(code = 204, message = "Successfully deleted account"),
+            @ApiResponse(code = 404, message = "Account doesn't exist"),
+            @ApiResponse(code = 401, message = "Unauthenticated access, authentication required"),
+            @ApiResponse(code = 403, message = "Missing privileges, access denied")
+    })
     public ResponseEntity<UserDTO> deleteById(@PathVariable("id") Long id) {
 
         userService.deleteById(id);

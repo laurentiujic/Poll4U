@@ -1,5 +1,9 @@
 package org.x1c1b.poll4u.web;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -15,6 +19,7 @@ import javax.validation.Valid;
 
 @RestController
 @RequestMapping("/auth")
+@Api(tags = {"auth"})
 public class AuthController {
 
     private AuthenticationManager authenticationManager;
@@ -29,6 +34,11 @@ public class AuthController {
 
     @PostMapping
     @ResponseBody
+    @ApiOperation(value = "Authenticate with a registered account")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Successfully authenticated"),
+            @ApiResponse(code = 401, message = "Authentication failed because of bad credentials")
+    })
     public ResponseEntity<TokenDTO> authenticate(@Valid @RequestBody CredentialsDTO credentials) {
 
         Authentication authentication = authenticationManager.authenticate(
