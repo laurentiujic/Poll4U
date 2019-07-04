@@ -3,7 +3,6 @@ package org.x1c1b.poll4u.dto;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.Before;
 import org.junit.Test;
-import org.modelmapper.ModelMapper;
 
 import javax.validation.ConstraintViolation;
 import javax.validation.Validation;
@@ -16,18 +15,16 @@ import static org.junit.Assert.*;
 public class UserUpdateDTOTest {
 
     private Validator validator;
-    private ModelMapper modelMapper;
 
     @Before
     public void setUp() {
 
         ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
         validator = factory.getValidator();
-        modelMapper = new ModelMapper();
     }
 
     @Test
-    public void validateBlank() {
+    public void validateWithBlankField() {
 
         UserUpdateDTO update = new UserUpdateDTO();
         Set<ConstraintViolation<UserUpdateDTO>> violations = validator.validate(update);
@@ -35,7 +32,7 @@ public class UserUpdateDTOTest {
         assertEquals(4, violations.size());
     }
 
-    @Test public void validateValidUserUpdateDTO() {
+    @Test public void validateWithValidFields() {
 
         UserUpdateDTO update = new UserUpdateDTO();
         update.setId(1L);
@@ -48,7 +45,7 @@ public class UserUpdateDTOTest {
         assertEquals(0, violations.size());
     }
 
-    @Test public void validateInvalidEmail() {
+    @Test public void validateWithMalformedEmail() {
 
         UserUpdateDTO update = new UserUpdateDTO();
         update.setId(1L);
@@ -61,7 +58,7 @@ public class UserUpdateDTOTest {
         assertEquals(1, violations.size());
     }
 
-    @Test public void validateShortUsername() {
+    @Test public void validateWithToShortUsername() {
 
         UserUpdateDTO update = new UserUpdateDTO();
         update.setId(1L);
@@ -74,7 +71,7 @@ public class UserUpdateDTOTest {
         assertEquals(1, violations.size());
     }
 
-    @Test public void validateLongUsername() {
+    @Test public void validateWithToLongUsername() {
 
         UserUpdateDTO update = new UserUpdateDTO();
         update.setId(1L);
@@ -87,7 +84,7 @@ public class UserUpdateDTOTest {
         assertEquals(1, violations.size());
     }
 
-    @Test public void validateInvalidPassword() {
+    @Test public void validateWithMalformedPassword() {
 
         UserUpdateDTO update = new UserUpdateDTO();
         update.setId(1L);
@@ -100,7 +97,7 @@ public class UserUpdateDTOTest {
         assertEquals(1, violations.size());
     }
 
-    @Test public void validateEmptyId() {
+    @Test public void validateWithoutId() {
 
         UserUpdateDTO update = new UserUpdateDTO();
         update.setUsername("user");

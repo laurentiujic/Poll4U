@@ -1,5 +1,6 @@
 package org.x1c1b.poll4u.dto;
 
+import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.Before;
 import org.junit.Test;
 import org.modelmapper.ModelMapper;
@@ -30,7 +31,7 @@ public class PollCreationDTOTest {
     }
 
     @Test
-    public void validateBlank() {
+    public void validateWithBlankFields() {
 
         PollCreationDTO creation = new PollCreationDTO();
         Set<ConstraintViolation<PollCreationDTO>> violations = validator.validate(creation);
@@ -38,7 +39,20 @@ public class PollCreationDTOTest {
         assertEquals(3, violations.size());
     }
 
-    @Test public void validWithoutChoices() {
+    @Test public void validateWithValidFields() {
+
+        PollCreationDTO creation = new PollCreationDTO();
+        creation.setQuestion("What's your favorite color?");
+        creation.setExpiration(new Date());
+        creation.setChoices(Arrays.asList(new ChoiceCreationDTO("Green"),
+                new ChoiceCreationDTO("Red")));
+
+        Set<ConstraintViolation<PollCreationDTO>> violations = validator.validate(creation);
+
+        assertEquals(0, violations.size());
+    }
+
+    @Test public void validateWithoutChoices() {
 
         PollCreationDTO creation = new PollCreationDTO();
         creation.setQuestion("What's your favorite color?");
@@ -49,16 +63,53 @@ public class PollCreationDTOTest {
         assertEquals(1, violations.size());
     }
 
-    @Test public void validateInvalidChoice() {
+    @Test public void validateWithInvalidChoice() {
 
         PollCreationDTO creation = new PollCreationDTO();
         creation.setQuestion("What's your favorite color?");
         creation.setExpiration(new Date());
-        creation.setChoices(Arrays.asList(new ChoiceCreationDTO(), new ChoiceCreationDTO()));
+        creation.setChoices(Arrays.asList(new ChoiceCreationDTO("Green"), new ChoiceCreationDTO()));
 
         Set<ConstraintViolation<PollCreationDTO>> violations = validator.validate(creation);
 
-        assertEquals(2, violations.size());
+        assertEquals(1, violations.size());
+    }
+
+    @Test public void validateWithoutExpiration() {
+
+        PollCreationDTO creation = new PollCreationDTO();
+        creation.setQuestion("What's your favorite color?");
+        creation.setChoices(Arrays.asList(new ChoiceCreationDTO("Green"),
+                new ChoiceCreationDTO("Red")));
+
+        Set<ConstraintViolation<PollCreationDTO>> violations = validator.validate(creation);
+
+        assertEquals(1, violations.size());
+    }
+
+    @Test public void validateWithToLongQuestion() {
+
+        PollCreationDTO creation = new PollCreationDTO();
+        creation.setQuestion(RandomStringUtils.random(141));
+        creation.setExpiration(new Date());
+        creation.setChoices(Arrays.asList(new ChoiceCreationDTO("Green"),
+                new ChoiceCreationDTO("Red")));
+
+        Set<ConstraintViolation<PollCreationDTO>> violations = validator.validate(creation);
+
+        assertEquals(1, violations.size());
+    }
+
+    @Test public void validateWithoutQuestion() {
+
+        PollCreationDTO creation = new PollCreationDTO();
+        creation.setExpiration(new Date());
+        creation.setChoices(Arrays.asList(new ChoiceCreationDTO("Green"),
+                new ChoiceCreationDTO("Red")));
+
+        Set<ConstraintViolation<PollCreationDTO>> violations = validator.validate(creation);
+
+        assertEquals(1, violations.size());
     }
 
     @Test public void mapToEntity() {

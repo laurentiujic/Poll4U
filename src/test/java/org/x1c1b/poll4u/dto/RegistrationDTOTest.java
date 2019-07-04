@@ -29,7 +29,7 @@ public class RegistrationDTOTest {
     }
 
     @Test
-    public void validateBlank() {
+    public void validateWithBlankFields() {
 
         RegistrationDTO registration = new RegistrationDTO();
         Set<ConstraintViolation<RegistrationDTO>> violations = validator.validate(registration);
@@ -37,7 +37,7 @@ public class RegistrationDTOTest {
         assertEquals(3, violations.size());
     }
 
-    @Test public void validateValidRegistrationDTO() {
+    @Test public void validateWithValidFields() {
 
         RegistrationDTO registration = new RegistrationDTO();
         registration.setUsername("user");
@@ -49,7 +49,7 @@ public class RegistrationDTOTest {
         assertEquals(0, violations.size());
     }
 
-    @Test public void validateInvalidEmail() {
+    @Test public void validateWithMalformedEmail() {
 
         RegistrationDTO registration = new RegistrationDTO();
         registration.setUsername("user");
@@ -61,7 +61,38 @@ public class RegistrationDTOTest {
         assertEquals(1, violations.size());
     }
 
-    @Test public void validateShortUsername() {
+    @Test public void validateWithoutEmail() {
+
+        RegistrationDTO registration = new RegistrationDTO();
+        registration.setUsername("user");
+        registration.setPassword("Abc123");
+
+        Set<ConstraintViolation<RegistrationDTO>> violations = validator.validate(registration);
+
+        assertEquals(1, violations.size());
+    }
+
+    @Test public void validateWithToLongEmail() {
+
+        /*
+        The maximum allowed local part size is 64 characters
+        http://www.rfc-editor.org/errata_search.php?rfc=3696&eid=1690
+         */
+
+        String local = RandomStringUtils.random(64, true, true);
+        String domain = RandomStringUtils.random(40, true, true);
+
+        RegistrationDTO registration = new RegistrationDTO();
+        registration.setUsername("user");
+        registration.setEmail(local + "@" + domain + ".com");
+        registration.setPassword("Abc123");
+
+        Set<ConstraintViolation<RegistrationDTO>> violations = validator.validate(registration);
+
+        assertEquals(1, violations.size());
+    }
+
+    @Test public void validateWithToShortUsername() {
 
         RegistrationDTO registration = new RegistrationDTO();
         registration.setUsername(RandomStringUtils.random(2));
@@ -73,7 +104,7 @@ public class RegistrationDTOTest {
         assertEquals(1, violations.size());
     }
 
-    @Test public void validateLongUsername() {
+    @Test public void validateWithToLongUsername() {
 
         RegistrationDTO registration = new RegistrationDTO();
         registration.setUsername(RandomStringUtils.random(20));
@@ -85,7 +116,7 @@ public class RegistrationDTOTest {
         assertEquals(1, violations.size());
     }
 
-    @Test public void validateInvalidPassword() {
+    @Test public void validateWithMalformedPassword() {
 
         RegistrationDTO registration = new RegistrationDTO();
         registration.setUsername("user");
