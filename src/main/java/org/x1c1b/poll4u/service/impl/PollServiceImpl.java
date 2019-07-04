@@ -4,6 +4,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.x1c1b.poll4u.dto.PollCreationDTO;
 import org.x1c1b.poll4u.dto.PollDTO;
@@ -61,6 +62,7 @@ public class PollServiceImpl implements PollService {
     }
 
     @Override
+    @PreAuthorize("hasRole('ROLE_USER')")
     public PollDTO create(PollCreationDTO creation) {
 
         Poll poll = modelMapper.map(creation, Poll.class);
@@ -70,6 +72,7 @@ public class PollServiceImpl implements PollService {
     }
 
     @Override
+    @PreAuthorize("hasRole('ROLE_ADMIN') or @authorization.isPollCreator(authentication, #id)")
     public void deleteById(Long id) {
 
         if(!pollRepository.existsById(id)) throw new ResourceNotFoundException("No poll with such identifier found");

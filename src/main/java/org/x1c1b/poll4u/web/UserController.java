@@ -5,7 +5,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import org.x1c1b.poll4u.dto.RegistrationDTO;
@@ -56,7 +55,6 @@ public class UserController {
 
     @PutMapping("/{id}")
     @ResponseBody
-    @PreAuthorize("hasRole('ROLE_ADMIN') or @authorization.isAccountOwner(authentication, #id)")
     public ResponseEntity<UserDTO> updateById(@PathVariable("id") Long id, @Valid @RequestBody UserUpdateDTO update) {
 
         return ResponseEntity.ok(userService.updateById(id, update));
@@ -64,7 +62,6 @@ public class UserController {
 
     @DeleteMapping("/{id}")
     @ResponseBody
-    @PreAuthorize("hasRole('ROLE_ADMIN') or @authorization.isAccountOwner(authentication, #id)")
     public ResponseEntity<UserDTO> deleteById(@PathVariable("id") Long id) {
 
         userService.deleteById(id);

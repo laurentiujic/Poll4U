@@ -4,6 +4,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.x1c1b.poll4u.dto.RegistrationDTO;
@@ -101,6 +102,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @PreAuthorize("hasRole('ROLE_ADMIN') or @authorization.isAccountOwner(authentication, #id)")
     public UserDTO updateById(Long id, UserUpdateDTO update) {
 
         User user = userRepository.findById(id).orElseThrow(
@@ -124,6 +126,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @PreAuthorize("hasRole('ROLE_ADMIN') or @authorization.isAccountOwner(authentication, #id)")
     public void deleteById(Long id) {
 
         if(!userRepository.existsById(id)) throw new ResourceNotFoundException("No user with such identifier found");
