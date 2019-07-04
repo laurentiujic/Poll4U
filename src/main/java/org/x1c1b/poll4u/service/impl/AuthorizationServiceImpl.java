@@ -1,5 +1,6 @@
 package org.x1c1b.poll4u.service.impl;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.x1c1b.poll4u.model.Poll;
@@ -11,6 +12,12 @@ import org.x1c1b.poll4u.service.AuthorizationService;
 public class AuthorizationServiceImpl implements AuthorizationService {
 
     private PollRepository pollRepository;
+
+    @Autowired
+    public AuthorizationServiceImpl(PollRepository pollRepository) {
+
+        this.pollRepository = pollRepository;
+    }
 
     @Override
     public boolean isAccountOwner(Authentication authentication, Long accountId) {
