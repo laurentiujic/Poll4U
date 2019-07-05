@@ -46,7 +46,7 @@ public class UserControllerTest {
 
         given(userService.findAll(any())).willReturn(page);
 
-        mvc.perform(get("/users")
+        mvc.perform(get("/api/v1/users")
                 .contentType(MediaType.APPLICATION_JSON_UTF8)
                 .accept(MediaType.APPLICATION_JSON_UTF8))
                 .andExpect(status().isOk())
@@ -66,7 +66,7 @@ public class UserControllerTest {
 
         given(userService.findById(1L)).willReturn(user);
 
-        mvc.perform(get("/users/1")
+        mvc.perform(get("/api/v1/users/1")
                 .contentType(MediaType.APPLICATION_JSON_UTF8)
                 .accept(MediaType.APPLICATION_JSON_UTF8))
                 .andExpect(status().isOk())
@@ -83,7 +83,7 @@ public class UserControllerTest {
 
         given(userService.create(any())).willReturn(user);
 
-        mvc.perform(post("/users")
+        mvc.perform(post("/api/v1/users")
                 .content(JsonUtils.toJson(registration))
                 .contentType(MediaType.APPLICATION_JSON_UTF8)
                 .accept(MediaType.APPLICATION_JSON_UTF8))
@@ -103,7 +103,7 @@ public class UserControllerTest {
 
         given(userService.updateById(eq(1L), any())).willReturn(user);
 
-        mvc.perform(put("/users/1")
+        mvc.perform(put("/api/v1/users/1")
                 .content(JsonUtils.toJson(update))
                 .contentType(MediaType.APPLICATION_JSON_UTF8)
                 .accept(MediaType.APPLICATION_JSON_UTF8))
@@ -120,7 +120,7 @@ public class UserControllerTest {
 
         willDoNothing().given(userService).deleteById(any());
 
-        mvc.perform(delete("/users/1"))
+        mvc.perform(delete("/api/v1/users/1"))
                 .andExpect(status().isNoContent());
     }
 }

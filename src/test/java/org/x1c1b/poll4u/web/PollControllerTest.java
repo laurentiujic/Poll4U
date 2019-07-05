@@ -72,7 +72,7 @@ public class PollControllerTest {
 
         given(pollService.findAll(any())).willReturn(page);
 
-        mvc.perform(get("/polls")
+        mvc.perform(get("/api/v1/polls")
                 .contentType(MediaType.APPLICATION_JSON_UTF8)
                 .accept(MediaType.APPLICATION_JSON_UTF8))
                 .andExpect(status().isOk())
@@ -99,7 +99,7 @@ public class PollControllerTest {
 
         given(pollService.create(any())).willReturn(expected);
 
-        mvc.perform(post("/polls")
+        mvc.perform(post("/api/v1/polls")
                 .content(JsonUtils.toJson(creation))
                 .contentType(MediaType.APPLICATION_JSON_UTF8)
                 .accept(MediaType.APPLICATION_JSON_UTF8))
