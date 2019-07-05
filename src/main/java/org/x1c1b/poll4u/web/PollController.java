@@ -16,7 +16,7 @@ import javax.validation.Valid;
 import java.net.URI;
 
 @RestController
-@RequestMapping("/polls")
+@RequestMapping("/api/v1/polls")
 @Api(tags = {"polls"})
 public class PollController {
 

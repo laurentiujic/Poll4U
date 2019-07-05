@@ -18,7 +18,7 @@ import org.x1c1b.poll4u.security.TokenProvider;
 import javax.validation.Valid;
 
 @RestController
-@RequestMapping("/auth")
+@RequestMapping("/api/v1/auth")
 @Api(tags = {"auth"})
 public class AuthController {
 

@@ -17,7 +17,7 @@ import javax.validation.Valid;
 import java.net.URI;
 
 @RestController
-@RequestMapping("/users")
+@RequestMapping("/api/v1/users")
 @Api(tags = {"users"})
 public class UserController {
 

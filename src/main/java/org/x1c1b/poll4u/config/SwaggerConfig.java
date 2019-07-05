@@ -23,9 +23,10 @@ public class SwaggerConfig {
     @Bean public Docket api() {
 
         return new Docket(DocumentationType.SWAGGER_2)
+                .groupName("poll4u-v1")
                 .select()
                 .apis(RequestHandlerSelectors.basePackage("org.x1c1b.poll4u"))
-                .paths(PathSelectors.any())
+                .paths(PathSelectors.regex("/api/v1.*"))
                 .build()
                 .useDefaultResponseMessages(false)
                 .securitySchemes(securitySchemes())
@@ -37,7 +38,7 @@ public class SwaggerConfig {
         return new ApiInfoBuilder()
                 .title("Poll4U REST API")
                 .description("Free organisation of your personal polls")
-                .version("0.0.1-SNAPSHOT")
+                .version("1.0.0")
                 .license("MIT License")
                 .licenseUrl("https://opensource.org/licenses/MIT")
                 .contact(new Contact("0x1C1B", "https://github.com/0x1C1B", "0x1c1b@github.com"))
