@@ -8,6 +8,9 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit4.SpringRunner;
+import org.x1c1b.poll4u.model.ChoiceState;
+
+import java.util.List;
 
 import static org.junit.Assert.*;
 
@@ -38,5 +41,14 @@ public class VoteRepositoryTest {
     @Test public void countByChoiceId() {
 
         assertEquals(0, voteRepository.countByChoiceId(1L));
+    }
+
+    @Test public void countByPollIdGroupByChoiceId() {
+
+        List<ChoiceState> list = voteRepository.countByPollIdGroupByChoiceId(1L);
+
+        assertEquals(1, list.size());
+        assertEquals(2L, (long) list.get(0).getChoiceId());
+        assertEquals(1L, (long) list.get(0).getVoteCount());
     }
 }

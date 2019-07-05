@@ -54,7 +54,7 @@ public class PollControllerTest {
         secondChoice.setId(1L);
         secondChoice.setDescription("Green");
 
-        expected= new PollDTO();
+        expected = new PollDTO();
         expected.setId(1L);
         expected.setQuestion("What's your favorite color?");
         expected.setExpiration(new Date());
