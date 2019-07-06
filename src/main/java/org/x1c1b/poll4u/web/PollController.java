@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -53,6 +54,7 @@ public class PollController {
 
     @PostMapping
     @ResponseBody
+    @ResponseStatus(HttpStatus.CREATED)
     @ApiOperation(value = "Create new poll", authorizations = {@Authorization("Bearer")})
     @ApiResponses(value = {
             @ApiResponse(code = 201, message = "Successfully created poll"),
@@ -70,7 +72,7 @@ public class PollController {
     }
 
     @DeleteMapping("/{id}")
-    @ResponseBody
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     @ApiOperation(value = "Delete poll", authorizations = {@Authorization("Bearer")})
     @ApiResponses(value = {
             @ApiResponse(code = 204, message = "Successfully deleted account"),
@@ -78,9 +80,8 @@ public class PollController {
             @ApiResponse(code = 401, message = "Unauthenticated access, authentication required"),
             @ApiResponse(code = 403, message = "Missing privileges, access denied")
     })
-    public ResponseEntity<PollDTO> deleteById(@PathVariable("id") Long id) {
+    public void deleteById(@PathVariable("id") Long id) {
 
         pollService.deleteById(id);
-        return ResponseEntity.noContent().build();
     }
 }

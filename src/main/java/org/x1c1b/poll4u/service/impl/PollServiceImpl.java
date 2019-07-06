@@ -9,56 +9,88 @@ import org.springframework.stereotype.Service;
 import org.x1c1b.poll4u.dto.PollCreationDTO;
 import org.x1c1b.poll4u.dto.PollDTO;
 import org.x1c1b.poll4u.error.ResourceNotFoundException;
-import org.x1c1b.poll4u.model.Choice;
+import org.x1c1b.poll4u.model.ChoiceState;
 import org.x1c1b.poll4u.model.Poll;
 import org.x1c1b.poll4u.repository.PollRepository;
+import org.x1c1b.poll4u.repository.VoteRepository;
 import org.x1c1b.poll4u.service.PollService;
 
-import java.util.List;
-import java.util.function.Consumer;
+import java.util.Map;
 import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
 
 @Service
 public class PollServiceImpl implements PollService {
 
     private PollRepository pollRepository;
+    private VoteRepository voteRepository;
     private ModelMapper modelMapper;
 
     @Autowired
-    public PollServiceImpl(PollRepository pollRepository, ModelMapper modelMapper) {
+    public PollServiceImpl(PollRepository pollRepository,
+                           VoteRepository voteRepository,
+                           ModelMapper modelMapper) {
 
         this.pollRepository = pollRepository;
         this.modelMapper = modelMapper;
-    }
-
-    @Override
-    public List<PollDTO> findAll() {
-
-        return StreamSupport.stream(pollRepository.findAll().spliterator(), false)
-                .map(poll -> modelMapper.map(poll, PollDTO.class))
-                .collect(Collectors.toList());
+        this.voteRepository = voteRepository;
     }
 
     @Override
     public Page<PollDTO> findAll(Pageable pageable) {
 
-        return pollRepository.findAll(pageable).map(poll -> modelMapper.map(poll, PollDTO.class));
+        Page<PollDTO> page = pollRepository.findAll(pageable)
+                .map(poll -> modelMapper.map(poll, PollDTO.class));
+
+        page.forEach(pollDTO -> {
+
+            Map<Long, Long> state = voteRepository.countByPollIdGroupByChoiceId(pollDTO.getId()).stream()
+                    .collect(Collectors.toMap(ChoiceState::getChoiceId, ChoiceState::getVoteCount));
+
+            pollDTO.getChoices().forEach(choiceDTO -> {
+
+                choiceDTO.setVoteCount(state.getOrDefault(choiceDTO.getId(), 0L));
+            });
+        });
+
+        return page;
     }
 
     @Override
     public Page<PollDTO> findByCreatedBy(Long userId, Pageable pageable) {
 
-        return pollRepository.findByCreatedBy(userId, pageable)
+        Page<PollDTO> page = pollRepository.findByCreatedBy(userId, pageable)
                 .map(poll -> modelMapper.map(poll, PollDTO.class));
+
+        page.forEach(pollDTO -> {
+
+            Map<Long, Long> state = voteRepository.countByPollIdGroupByChoiceId(pollDTO.getId()).stream()
+                    .collect(Collectors.toMap(ChoiceState::getChoiceId, ChoiceState::getVoteCount));
+
+            pollDTO.getChoices().forEach(choiceDTO -> {
+
+                choiceDTO.setVoteCount(state.getOrDefault(choiceDTO.getId(), 0L));
+            });
+        });
+
+        return page;
     }
 
     @Override
     public PollDTO findById(Long id) {
 
-        return modelMapper.map(pollRepository.findById(id).orElseThrow(
+        PollDTO pollDTO = modelMapper.map(pollRepository.findById(id).orElseThrow(
                 () -> new ResourceNotFoundException("No poll with such identifier found")),
                 PollDTO.class);
+
+        Map<Long, Long> state = voteRepository.countByPollIdGroupByChoiceId(id).stream()
+                .collect(Collectors.toMap(ChoiceState::getChoiceId, ChoiceState::getVoteCount));
+
+        pollDTO.getChoices().forEach(choiceDTO -> {
+
+            choiceDTO.setVoteCount(state.getOrDefault(choiceDTO.getId(), 0L));
+        });
+
+        return pollDTO;
     }
 
     @Override

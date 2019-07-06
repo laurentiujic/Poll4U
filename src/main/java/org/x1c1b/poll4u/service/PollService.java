@@ -9,7 +9,11 @@ import java.util.List;
 
 public interface PollService {
 
-    List<PollDTO> findAll();
+    default List<PollDTO> findAll() {
+
+        throw new UnsupportedOperationException();
+    }
+
     Page<PollDTO> findAll(Pageable pageable);
     Page<PollDTO> findByCreatedBy(Long userId, Pageable pageable);
     PollDTO findById(Long id);

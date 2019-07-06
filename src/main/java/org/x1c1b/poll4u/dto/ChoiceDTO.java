@@ -4,13 +4,15 @@ public class ChoiceDTO {
 
     private Long id;
     private String description;
+    private Long voteCount;
 
     public ChoiceDTO() { }
 
-    public ChoiceDTO(Long id, String description) {
+    public ChoiceDTO(Long id, String description, Long voteCount) {
 
         this.id = id;
         this.description = description;
+        this.voteCount = voteCount;
     }
 
     public Long getId() {
@@ -27,5 +29,13 @@ public class ChoiceDTO {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public Long getVoteCount() {
+        return voteCount;
+    }
+
+    public void setVoteCount(Long voteCount) {
+        this.voteCount = voteCount;
     }
 }
