@@ -40,7 +40,7 @@ public class UserControllerTest {
 
     @Test public void findAll() throws Exception {
 
-        UserDTO user = new UserDTO(1L, "user","user@web.de", "Abc123");
+        UserDTO user = new UserDTO(1L, "user","user@web.de");
         List<UserDTO> users = Collections.singletonList(user);
         Page<UserDTO> page = new PageImpl<>(users);
 
@@ -62,7 +62,7 @@ public class UserControllerTest {
 
     @Test public void findById() throws Exception {
 
-        UserDTO user = new UserDTO(1L, "user","user@web.de", "Abc123");
+        UserDTO user = new UserDTO(1L, "user","user@web.de");
 
         given(userService.findById(1L)).willReturn(user);
 
@@ -78,7 +78,7 @@ public class UserControllerTest {
 
     @Test public void create() throws Exception {
 
-        UserDTO user = new UserDTO(1L, "user","user@web.de", "Abc123");
+        UserDTO user = new UserDTO(1L, "user","user@web.de");
         RegistrationDTO registration = new RegistrationDTO("user","user@web.de", "Abc123");
 
         given(userService.create(any())).willReturn(user);
@@ -98,7 +98,7 @@ public class UserControllerTest {
     @WithMockUserDetails
     public void updateById() throws Exception {
 
-        UserDTO user = new UserDTO(1L, "user","user@web.de", "Abc123");
+        UserDTO user = new UserDTO(1L, "user","user@web.de");
         UserUpdateDTO update = new UserUpdateDTO(1L, "user","user@web.de", "Abc123");
 
         given(userService.updateById(eq(1L), any())).willReturn(user);

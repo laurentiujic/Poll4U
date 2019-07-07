@@ -1,10 +1,15 @@
 package org.x1c1b.poll4u.dto;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+
 import javax.validation.constraints.NotNull;
 
+@ApiModel(description = "Create vote request payload")
 public class VoteCreationDTO {
 
     @NotNull(message = "Choice selection is required")
+    @ApiModelProperty(value = "Existing choice's identifier")
     private Long choiceId;
 
     public VoteCreationDTO() { }

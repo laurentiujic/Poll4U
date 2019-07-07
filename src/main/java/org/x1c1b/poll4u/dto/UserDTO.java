@@ -1,15 +1,23 @@
 package org.x1c1b.poll4u.dto;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+
+@ApiModel(description = "User account model")
 public class UserDTO {
 
+    @ApiModelProperty(value = "User's unique identifier")
     private Long id;
+
+    @ApiModelProperty(value = "Account's username")
     private String username;
+
+    @ApiModelProperty(value = "Account's email address")
     private String email;
-    private String password;
 
     public UserDTO() { }
 
-    public UserDTO(Long id, String username, String email, String password) {
+    public UserDTO(Long id, String username, String email) {
 
         this.id = id;
         this.username = username;
@@ -38,13 +46,5 @@ public class UserDTO {
 
     public void setEmail(String email) {
         this.email = email;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
     }
 }

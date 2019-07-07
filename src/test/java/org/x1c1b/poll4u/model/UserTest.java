@@ -97,6 +97,5 @@ public class UserTest {
         assertEquals(user.getId(), dto.getId());
         assertEquals(user.getUsername(), dto.getUsername());
         assertEquals(user.getEmail(), dto.getEmail());
-        assertEquals(user.getPassword(), dto.getPassword());
     }
 }

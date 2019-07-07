@@ -1,18 +1,52 @@
 package org.x1c1b.poll4u.dto;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+
 import java.util.Date;
 import java.util.List;
 
+@ApiModel(description = "Default poll model")
 public class PollDTO {
 
+    @ApiModelProperty(value = "Poll's unique identifier")
     private Long id;
+
+    @ApiModelProperty(value = "Question of the poll")
     private String question;
+
+    @ApiModelProperty(value = "Selectable choices for answering the question")
     private List<ChoiceDTO> choices;
+
+    @ApiModelProperty(value = "Date of poll's expiration")
     private Date expiration;
+
+    @ApiModelProperty(value = "Identifier of poll's creator")
     private Long createdBy;
+
+    @ApiModelProperty(value = "Identifier of last user that updated the poll")
     private Long updatedBy;
+
+    @ApiModelProperty(value = "Creation time of poll")
     private Date createdAt;
+
+    @ApiModelProperty(value = "Last time poll was updated")
     private Date updatedAt;
+
+    public PollDTO() { }
+
+    public PollDTO(Long id, String question, List<ChoiceDTO> choices, Date expiration,
+                   Long createdBy, Long updatedBy, Date createdAt, Date updatedAt) {
+
+        this.id = id;
+        this.question = question;
+        this.choices = choices;
+        this.expiration = expiration;
+        this.createdBy = createdBy;
+        this.updatedBy = updatedBy;
+        this.createdAt = createdAt;
+        this.updatedAt = updatedAt;
+    }
 
     public Long getId() {
         return id;

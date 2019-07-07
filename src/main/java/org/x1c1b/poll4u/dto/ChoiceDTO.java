@@ -1,9 +1,18 @@
 package org.x1c1b.poll4u.dto;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+
+@ApiModel(description = "Default choice model")
 public class ChoiceDTO {
 
+    @ApiModelProperty(value = "Choice's unique identifier")
     private Long id;
+
+    @ApiModelProperty(value = "Describes the choice")
     private String description;
+
+    @ApiModelProperty(value = "Amount of votes for this choice")
     private Long voteCount;
 
     public ChoiceDTO() { }
