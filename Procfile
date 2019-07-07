@@ -1,0 +1,1 @@
+web: java -jar target/poll4u-1.0.0.jar
