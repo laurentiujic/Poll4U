@@ -12,12 +12,16 @@ public class TokenDTO {
     @ApiModelProperty(value = "Generated token's type", example = "Bearer")
     private String type;
 
+    @ApiModelProperty(value = "Authenticated user")
+    private UserDTO user;
+
     public TokenDTO() { }
 
-    public TokenDTO(String token, String type) {
+    public TokenDTO(String token, String type, UserDTO user) {
 
         this.token = token;
         this.type = type;
+        this.user = user;
     }
 
     public String getToken() {
@@ -34,5 +38,13 @@ public class TokenDTO {
 
     public void setType(String type) {
         this.type = type;
+    }
+
+    public UserDTO getUser() {
+        return user;
+    }
+
+    public void setUser(UserDTO user) {
+        this.user = user;
     }
 }

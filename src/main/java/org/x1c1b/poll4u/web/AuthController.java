@@ -13,7 +13,9 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import org.x1c1b.poll4u.dto.CredentialsDTO;
 import org.x1c1b.poll4u.dto.TokenDTO;
+import org.x1c1b.poll4u.dto.UserDTO;
 import org.x1c1b.poll4u.security.TokenProvider;
+import org.x1c1b.poll4u.security.UserPrincipal;
 
 import javax.validation.Valid;
 
@@ -48,6 +50,9 @@ public class AuthController {
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
         String token = tokenProvider.generate(authentication);
-        return ResponseEntity.ok(new TokenDTO(token, "Bearer"));
+        UserPrincipal principal = (UserPrincipal) authentication.getPrincipal();
+        UserDTO user = new UserDTO(principal.getId(), principal.getUsername(), principal.getEmail());
+
+        return ResponseEntity.ok(new TokenDTO(token, "Bearer", user));
     }
 }
