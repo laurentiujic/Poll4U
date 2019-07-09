@@ -13,10 +13,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.x1c1b.poll4u.JsonUtils;
 import org.x1c1b.poll4u.WithMockUserDetails;
-import org.x1c1b.poll4u.dto.ChoiceCreationDTO;
-import org.x1c1b.poll4u.dto.ChoiceDTO;
-import org.x1c1b.poll4u.dto.PollCreationDTO;
-import org.x1c1b.poll4u.dto.PollDTO;
+import org.x1c1b.poll4u.dto.*;
 import org.x1c1b.poll4u.security.UserPrincipalService;
 import org.x1c1b.poll4u.service.PollService;
 
@@ -60,8 +57,8 @@ public class PollControllerTest {
         expected.setExpiration(new Date());
         expected.setCreatedAt(new Date());
         expected.setCreatedAt(new Date());
-        expected.setUpdatedBy(1L);
-        expected.setCreatedBy(1L);
+        expected.setUpdatedBy(new UserDTO());
+        expected.setCreatedBy(new UserDTO());
         expected.setChoices(Arrays.asList(firstChoice, secondChoice));
     }
 

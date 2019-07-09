@@ -21,11 +21,11 @@ public class PollDTO {
     @ApiModelProperty(value = "Date of poll's expiration")
     private Date expiration;
 
-    @ApiModelProperty(value = "Identifier of poll's creator")
-    private Long createdBy;
+    @ApiModelProperty(value = "Poll's creator")
+    private UserDTO createdBy;
 
-    @ApiModelProperty(value = "Identifier of last user that updated the poll")
-    private Long updatedBy;
+    @ApiModelProperty(value = "Last user that updated the poll")
+    private UserDTO updatedBy;
 
     @ApiModelProperty(value = "Creation time of poll")
     private Date createdAt;
@@ -36,7 +36,7 @@ public class PollDTO {
     public PollDTO() { }
 
     public PollDTO(Long id, String question, List<ChoiceDTO> choices, Date expiration,
-                   Long createdBy, Long updatedBy, Date createdAt, Date updatedAt) {
+                   UserDTO createdBy, UserDTO updatedBy, Date createdAt, Date updatedAt) {
 
         this.id = id;
         this.question = question;
@@ -80,19 +80,19 @@ public class PollDTO {
         this.expiration = expiration;
     }
 
-    public Long getCreatedBy() {
+    public UserDTO getCreatedBy() {
         return createdBy;
     }
 
-    public void setCreatedBy(Long createdBy) {
+    public void setCreatedBy(UserDTO createdBy) {
         this.createdBy = createdBy;
     }
 
-    public Long getUpdatedBy() {
+    public UserDTO getUpdatedBy() {
         return updatedBy;
     }
 
-    public void setUpdatedBy(Long updatedBy) {
+    public void setUpdatedBy(UserDTO updatedBy) {
         this.updatedBy = updatedBy;
     }
 

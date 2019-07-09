@@ -13,15 +13,15 @@ public class ChoiceDTO {
     private String description;
 
     @ApiModelProperty(value = "Amount of votes for this choice")
-    private Long voteCount;
+    private Long votes;
 
     public ChoiceDTO() { }
 
-    public ChoiceDTO(Long id, String description, Long voteCount) {
+    public ChoiceDTO(Long id, String description, Long votes) {
 
         this.id = id;
         this.description = description;
-        this.voteCount = voteCount;
+        this.votes = votes;
     }
 
     public Long getId() {
@@ -40,11 +40,11 @@ public class ChoiceDTO {
         this.description = description;
     }
 
-    public Long getVoteCount() {
-        return voteCount;
+    public Long getVotes() {
+        return votes;
     }
 
-    public void setVoteCount(Long voteCount) {
-        this.voteCount = voteCount;
+    public void setVotes(Long votes) {
+        this.votes = votes;
     }
 }

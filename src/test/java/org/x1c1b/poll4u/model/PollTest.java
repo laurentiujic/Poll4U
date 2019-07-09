@@ -44,9 +44,7 @@ public class PollTest {
         assertEquals(poll.getQuestion(), dto.getQuestion());
         assertEquals(poll.getExpiration(), dto.getExpiration());
         assertEquals(poll.getChoices().size(), dto.getChoices().size());
-        assertEquals(poll.getUpdatedBy(), dto.getUpdatedBy());
         assertEquals(poll.getUpdatedAt(), dto.getUpdatedAt());
         assertEquals(poll.getCreatedAt(), dto.getCreatedAt());
-        assertEquals(poll.getCreatedBy(), dto.getCreatedBy());
     }
 }
