@@ -15,6 +15,7 @@ import org.x1c1b.poll4u.repository.PollRepository;
 import org.x1c1b.poll4u.repository.VoteRepository;
 import org.x1c1b.poll4u.service.PollService;
 
+import javax.transaction.Transactional;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -105,9 +106,11 @@ public class PollServiceImpl implements PollService {
 
     @Override
     @PreAuthorize("hasRole('ROLE_ADMIN') or @authorization.isPollCreator(authentication, #id)")
+    @Transactional
     public void deleteById(Long id) {
 
         if(!pollRepository.existsById(id)) throw new ResourceNotFoundException("No poll with such identifier found");
+        voteRepository.deleteByPollId(id);
         pollRepository.deleteById(id);
     }
 }

@@ -22,4 +22,6 @@ public interface VoteRepository extends PagingAndSortingRepository<Vote, Long> {
     List<ChoiceState> countByPollIdGroupByChoiceId(@Param("pollId") Long pollId);
 
     boolean existsByPollIdAndUserId(Long pollId, Long userId);
+
+    void deleteByPollId(Long pollId);
 }
