@@ -15,13 +15,17 @@ public class ChoiceDTO {
     @ApiModelProperty(value = "Amount of votes for this choice")
     private Long votes;
 
+    @ApiModelProperty(value = "Indicates if voted by current user")
+    private boolean voted;
+
     public ChoiceDTO() { }
 
-    public ChoiceDTO(Long id, String description, Long votes) {
+    public ChoiceDTO(Long id, String description, Long votes, boolean voted) {
 
         this.id = id;
         this.description = description;
         this.votes = votes;
+        this.voted = voted;
     }
 
     public Long getId() {
@@ -46,5 +50,13 @@ public class ChoiceDTO {
 
     public void setVotes(Long votes) {
         this.votes = votes;
+    }
+
+    public boolean isVoted() {
+        return voted;
+    }
+
+    public void setVoted(boolean voted) {
+        this.voted = voted;
     }
 }
