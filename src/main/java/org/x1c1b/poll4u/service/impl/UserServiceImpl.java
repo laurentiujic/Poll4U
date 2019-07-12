@@ -1,6 +1,5 @@
 package org.x1c1b.poll4u.service.impl;
 
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -10,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.x1c1b.poll4u.dto.RegistrationDTO;
 import org.x1c1b.poll4u.dto.UserDTO;
 import org.x1c1b.poll4u.dto.UserUpdateDTO;
+import org.x1c1b.poll4u.dto.mapper.UserMapper;
 import org.x1c1b.poll4u.error.BadRequestException;
 import org.x1c1b.poll4u.error.ResourceNotFoundException;
 import org.x1c1b.poll4u.model.Role;
@@ -29,56 +29,53 @@ public class UserServiceImpl implements UserService {
     private UserRepository userRepository;
     private RoleRepository roleRepository;
     private PasswordEncoder passwordEncoder;
-    private ModelMapper modelMapper;
+    private UserMapper userMapper;
 
     @Autowired
     public UserServiceImpl(UserRepository userRepository,
                            RoleRepository roleRepository,
                            PasswordEncoder passwordEncoder,
-                           ModelMapper modelMapper) {
+                           UserMapper userMapper) {
 
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
         this.passwordEncoder = passwordEncoder;
-        this.modelMapper = modelMapper;
+        this.userMapper = userMapper;
     }
 
     @Override
     public List<UserDTO> findAll() {
 
         return StreamSupport.stream(userRepository.findAll().spliterator(), false)
-                .map(user -> modelMapper.map(user, UserDTO.class))
+                .map(user -> userMapper.map(user))
                 .collect(Collectors.toList());
     }
 
     @Override
     public Page<UserDTO> findAll(Pageable pageable) {
 
-        return userRepository.findAll(pageable).map((user) -> modelMapper.map(user, UserDTO.class));
+        return userRepository.findAll(pageable).map((user) -> userMapper.map(user));
     }
 
     @Override
     public UserDTO findById(Long id) {
 
-        return modelMapper.map(userRepository.findById(id).orElseThrow(
-                () -> new ResourceNotFoundException("No user with such identifier found")),
-                UserDTO.class);
+        return userMapper.map(userRepository.findById(id).orElseThrow(
+                () -> new ResourceNotFoundException("No user with such identifier found")));
     }
 
     @Override
     public UserDTO findByUsername(String username) {
 
-        return modelMapper.map(userRepository.findByUsername(username).orElseThrow(
-                () -> new ResourceNotFoundException("No user with such username found")),
-                UserDTO.class);
+        return userMapper.map(userRepository.findByUsername(username).orElseThrow(
+                () -> new ResourceNotFoundException("No user with such username found")));
     }
 
     @Override
     public UserDTO findByEmail(String email) {
 
-        return modelMapper.map(userRepository.findByEmail(email).orElseThrow(
-                () -> new ResourceNotFoundException("No user with such email found")),
-                UserDTO.class);
+        return userMapper.map(userRepository.findByEmail(email).orElseThrow(
+                () -> new ResourceNotFoundException("No user with such email found")));
     }
 
     @Override
@@ -93,12 +90,12 @@ public class UserServiceImpl implements UserService {
         Role role = roleRepository.findByName(Role.RoleName.ROLE_USER).orElseThrow(
                 () -> new ResourceNotFoundException("No such role found"));
 
-        User user = modelMapper.map(registration, User.class);
+        User user = userMapper.map(registration);
 
         user.setPassword(passwordEncoder.encode(registration.getPassword()));
         user.setRoles(Collections.singleton(role));
 
-        return modelMapper.map(userRepository.save(user), UserDTO.class);
+        return userMapper.map(userRepository.save(user));
     }
 
     @Override
@@ -122,7 +119,7 @@ public class UserServiceImpl implements UserService {
         user.setPassword(passwordEncoder.encode(update.getPassword()));
         user.setEmail(update.getEmail());
 
-        return modelMapper.map(userRepository.save(user), UserDTO.class);
+        return userMapper.map(userRepository.save(user));
     }
 
     @Override

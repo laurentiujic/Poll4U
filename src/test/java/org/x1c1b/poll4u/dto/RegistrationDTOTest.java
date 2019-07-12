@@ -3,7 +3,6 @@ package org.x1c1b.poll4u.dto;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.Before;
 import org.junit.Test;
-import org.modelmapper.ModelMapper;
 import org.x1c1b.poll4u.model.User;
 
 import javax.validation.ConstraintViolation;
@@ -18,14 +17,12 @@ import static org.junit.Assert.*;
 public class RegistrationDTOTest {
 
     private Validator validator;
-    private ModelMapper modelMapper;
 
     @Before
     public void setUp() {
 
         ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
         validator = factory.getValidator();
-        modelMapper = new ModelMapper();
     }
 
     @Test
@@ -126,19 +123,5 @@ public class RegistrationDTOTest {
         Set<ConstraintViolation<RegistrationDTO>> violations = validator.validate(registration);
 
         assertEquals(1, violations.size());
-    }
-
-    @Test public void mapToEntity() {
-
-        RegistrationDTO registration = new RegistrationDTO();
-        registration.setUsername("user");
-        registration.setEmail("user@web.de");
-        registration.setPassword("Abc123");
-
-        User user = modelMapper.map(registration, User.class);
-
-        assertEquals(registration.getUsername(), user.getUsername());
-        assertEquals(registration.getEmail(), user.getEmail());
-        assertEquals(registration.getPassword(), user.getPassword());
     }
 }

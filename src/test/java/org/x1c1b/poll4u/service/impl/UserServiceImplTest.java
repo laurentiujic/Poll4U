@@ -5,10 +5,10 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
-import org.modelmapper.ModelMapper;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.x1c1b.poll4u.dto.RegistrationDTO;
 import org.x1c1b.poll4u.dto.UserUpdateDTO;
+import org.x1c1b.poll4u.dto.mapper.UserMapper;
 import org.x1c1b.poll4u.error.BadRequestException;
 import org.x1c1b.poll4u.error.ResourceNotFoundException;
 import org.x1c1b.poll4u.model.User;
@@ -28,14 +28,14 @@ public class UserServiceImplTest {
     @Mock private UserRepository userRepository;
     @Mock private RoleRepository roleRepository;
     @Mock private PasswordEncoder passwordEncoder;
-    @Mock private ModelMapper modelMapper;
+    @Mock private UserMapper userMapper;
 
     private UserService service;
 
     @Before
     public void setUp() {
 
-        service = new UserServiceImpl(userRepository, roleRepository, passwordEncoder, modelMapper);
+        service = new UserServiceImpl(userRepository, roleRepository, passwordEncoder, userMapper);
     }
 
     @Test(expected = BadRequestException.class)
