@@ -33,10 +33,14 @@ public class PollDTO {
     @ApiModelProperty(value = "Last time poll was updated")
     private Date updatedAt;
 
+    @ApiModelProperty(value = "Determines if current user already voted")
+    private boolean voted;
+
     public PollDTO() { }
 
     public PollDTO(Long id, String question, List<ChoiceDTO> choices, Date expiration,
-                   UserDTO createdBy, UserDTO updatedBy, Date createdAt, Date updatedAt) {
+                   UserDTO createdBy, UserDTO updatedBy, Date createdAt,
+                   Date updatedAt, boolean voted) {
 
         this.id = id;
         this.question = question;
@@ -46,6 +50,7 @@ public class PollDTO {
         this.updatedBy = updatedBy;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
+        this.voted = voted;
     }
 
     public Long getId() {
@@ -110,5 +115,13 @@ public class PollDTO {
 
     public void setUpdatedAt(Date updatedAt) {
         this.updatedAt = updatedAt;
+    }
+
+    public boolean isVoted() {
+        return voted;
+    }
+
+    public void setVoted(boolean voted) {
+        this.voted = voted;
     }
 }
