@@ -46,6 +46,8 @@ public abstract class PollMapper {
         dto.setUpdatedBy(userMapper.map(userRepository
                 .findById(poll.getUpdatedBy()).orElse(null)));
 
+        dto.setVotes(voteRepository.countByPollId(poll.getId()));
+
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
         if(null == authentication ||
