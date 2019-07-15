@@ -4,9 +4,14 @@
 ## Table of Contents
 
 - [Overview](#overview)
-    - [Technical Details](#technical-details)
+- [Development](#development)
+    - [Project Structure](#project-structure)
+    - [Getting Started](#getting-started)
+        - [Profiles](#profiles)
+        - [Persistence](#persistence)
 - [License](#license)
     - [Forbidden](#forbidden)
+- [Appendix](#appendix)
 
 ## Overview
 
@@ -14,15 +19,106 @@ The idea behind this project is to allow each registered user to create new poll
 
 In detail the service is very simple: It includes creating polls with multiple choice options. This means a user is able to set between two and six choices on poll creation time. Each other user can vote for this poll once, by choosing one of the provided options. After the poll is expired, defined by a choosen expiration date, the poll get locked and is from now on just read-only.
 
-### Technical Details
+## Development
 
-The *RESTful* design is used for structuring the web service, this means all operations are based on plain *HTTP* requests. Even the simplest *HTTP* clients will be able to access this API. The API itself is structured by using different routes. Each of this routes supports the *JSON* media type for consumption and production, this requires that the client is able to deal with *JSON*.
+The project is based on a opinionated view of the [Spring](https://spring.io/) platform and it's third party libraries, known as [Spring Boot](https://spring.io/projects/spring-boot). For building the project and managing dependencies the famous [Apache Maven](https://maven.apache.org/) build autonomation tool is used. In detail the project is developed with *Oracle Java 8 (JDK8)* and should be compatible with newer versions.
 
-The whole project is based on *Oracle Java 8 (JDK8)* and the *Spring Boot 2.1.6.RELEASE Framework*. Furthermore a lot of additional technologies and libraries are used for getting this service working:
+### Project Structure
 
-- **Swagger**: Swagger is used for API documentation. For allow easiest as possible client-side development, a goode API documentation is required. Swagger generates the documentation in form of an HTML page hosted by the same base url like the API itself.
-- **JJWT**: This service also includes routes dealing with sensitive date. For securing this routes authentication is required, in this case *JSON Web Tokens* are used. For bringing this functionality the [JJWT](https://java.jsonwebtoken.io/) library is used.
-- **MapStruct**: For flexibility reasons, this service doesn't work with JPA enities inside the web layer, instead *Data Transfer Objects (DTO)* are used. This brings dynamic but also the requirement to map entity and related DTO. For this [MapStruct](http://mapstruct.org/) is used.
+```bash
+.
+/---src
+|   /---main
+|   |   /---java
+|   |   |   /---org.x1c1b.poll4u
+|   |   |       /---config
+|   |   |       /---dto
+|   |   |       |   /---mapper
+|   |   |       /---error
+|   |   |       /---model
+|   |   |       |   /---audit
+|   |   |       /---repository
+|   |   |       /---security
+|   |   |       /---service
+|   |   |       |   /---impl
+|   |   |       /---web
+|   |   |       |   /---auth
+|   |   |       +---Poll4UApplication.java
+|   |   /---resources
+|   |       +---application.properties
+|   |       +---application-test.properties
+|   |       +---application-prod.properties
+|   |       +---banner.txt
+|   /---test
+|
++---Procfile
++---pom.xml
+```
+The Poll4U service is divided into three logical layers: *Web Layer*, *Service Layer*, *Repository Layer*. This are the basis of the project architecture and all other components are arranged around or somewhere between.
+
+### Getting Started
+
+The project is developed as a Spring Boot standalone application. This means it's deployed as a executable *JAR* with embedded *Tomcat Web Server* instead of a traditional *WAR*. The result is that **no** application server is required for executing the service. The whole project is based on Oracle Java 8 (JDK8) and the Spring Boot 2.1.6.RELEASE Framework. This requires an installed *JDK8* or a newer version.
+
+#### Profiles
+
+Moreover different profiles are used, e.g. for testing (`application-test.properties`) or for production (`application-prod.properties`). In addition a local development profile (`application-dev.properties`) is used, that isn't part of the repository. So first it's required\* to configure the development profile:
+
+```properties
+# ----------------------------------------
+# DATA PROPERTIES
+# ----------------------------------------
+
+# DATASOURCE
+spring.datasource.url=<URL>
+spring.datasource.username=<USERNAME>
+spring.datasource.password=<PASSWORD>
+
+# JPA
+spring.jpa.generate-ddl=true
+spring.jpa.hibernate.ddl-auto=update
+
+# ----------------------------------------
+# WEB PROPERTIES
+# ----------------------------------------
+
+# EMBEDDED SERVER CONFIGURATION
+server.port=<PORT>
+
+# ----------------------------------------
+# Poll4U PROPERTIES
+# ----------------------------------------
+
+# Security
+poll4u.security.secret=<SECRET>
+```
+This is a minimal development profile. Of course the wildcards **must** be replaced by sensible values.
+
+>**Please note:** Spring loads the default `application.properties` file by default, that isn't complete. This means the service is only runable if the default config file is combined with a specification (e.g. `test`, `prod`, `dev`). For setting the environment/profile the environment variable `POLL4U_PROFILE` must be set, for example `POLL4U_PROFILE=dev`.
+
+*\*Instead of course the production or testing profile could be used*
+
+#### Persistence
+
+This project uses different data sources (databases) dependend to the profile/environment. The databases for the testing and production environment are preset: The testing environment uses `H2` and the production environment `PostgreSql`. The database used inside of the development environment is very flexible, this means each developer can use it's own prefered database, as long it's an SQL database supported by `Hibernate ORM` and the driver dependencies are in the classpath means declared inside of `pom.xml`.
+
+Like any other properties the data source is configured inside of the related profile, for example the `MySql` database for the development environment:
+
+```properties
+spring.datasource.url=jdbc:mysql://localhost:3306/poll4u?useSSL=false&serverTimezone=UTC
+spring.datasource.username=<USERNAME>
+spring.datasource.password=<PASSWORD>
+```
+With the declared dependency inside of `pom.xml`:
+```xml
+<dependency>
+    <groupId>mysql</groupId>
+    <artifactId>mysql-connector-java</artifactId>
+    <scope>runtime</scope>
+</dependency>
+```
+
+>**Please note:** Creating schemas or tables manually isn't required. The service creates the tables automatically if they doesn't exist. Required are a working database installation and the required privileges for reading and writing.
 
 ## License
 
@@ -53,3 +149,36 @@ more details.
 
 **Hold Liable**: Software is provided without warranty and the software
 author/license owner cannot be held liable for damages.
+
+## Appendix
+
+`application-dev.properties`: Opinionated development profile
+```properties
+# ----------------------------------------
+# DATA PROPERTIES
+# ----------------------------------------
+
+# DATASOURCE
+spring.datasource.url=jdbc:mysql://localhost:3306/poll4u?useSSL=false&serverTimezone=UTC
+spring.datasource.username=<USERNAME>
+spring.datasource.password=<PASSWORD>
+
+# JPA
+spring.jpa.generate-ddl=true
+spring.jpa.hibernate.ddl-auto=update
+spring.jpa.database-platform=org.hibernate.dialect.MySQL5InnoDBDialect
+
+# ----------------------------------------
+# WEB PROPERTIES
+# ----------------------------------------
+
+# EMBEDDED SERVER CONFIGURATION
+server.port=3000
+
+# ----------------------------------------
+# Poll4U PROPERTIES
+# ----------------------------------------
+
+# Security
+poll4u.security.secret=<SECRET>
+```
