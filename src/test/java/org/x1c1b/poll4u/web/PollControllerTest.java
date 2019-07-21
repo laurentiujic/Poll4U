@@ -57,8 +57,8 @@ public class PollControllerTest {
         expected.setExpiration(new Date());
         expected.setCreatedAt(new Date());
         expected.setCreatedAt(new Date());
-        expected.setUpdatedBy(new UserDTO());
-        expected.setCreatedBy(new UserDTO());
+        expected.setUpdatedBy(new ProfileDTO());
+        expected.setCreatedBy(new ProfileDTO());
         expected.setChoices(Arrays.asList(firstChoice, secondChoice));
     }
 

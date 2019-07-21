@@ -28,6 +28,7 @@ public abstract class PollMapper {
     @Mapping(target = "createdBy", ignore = true)
     @Mapping(target = "updatedBy", ignore = true)
     @Mapping(target = "voted", ignore = true)
+    @Mapping(target = "votes", ignore = true)
     public abstract PollDTO map(Poll poll);
 
     @Mapping(target = "id", ignore = true)
@@ -40,10 +41,10 @@ public abstract class PollMapper {
     @AfterMapping
     protected void postMap(Poll poll, @MappingTarget PollDTO dto) {
 
-        dto.setCreatedBy(userMapper.map(userRepository
+        dto.setCreatedBy(userMapper.mapProfile(userRepository
                 .findById(poll.getCreatedBy()).orElse(null)));
 
-        dto.setUpdatedBy(userMapper.map(userRepository
+        dto.setUpdatedBy(userMapper.mapProfile(userRepository
                 .findById(poll.getUpdatedBy()).orElse(null)));
 
         dto.setVotes(voteRepository.countByPollId(poll.getId()));

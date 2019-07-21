@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+import org.x1c1b.poll4u.dto.ProfileDTO;
 import org.x1c1b.poll4u.dto.RegistrationDTO;
 import org.x1c1b.poll4u.dto.UserDTO;
 import org.x1c1b.poll4u.dto.UserUpdateDTO;
@@ -36,7 +37,7 @@ public class UserController {
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Successfully fetched accounts")
     })
-    public ResponseEntity<Page<UserDTO>> findAll(@PageableDefault Pageable pageable) {
+    public ResponseEntity<Page<ProfileDTO>> findAll(@PageableDefault Pageable pageable) {
 
         return ResponseEntity.ok(userService.findAll(pageable));
     }
@@ -48,7 +49,7 @@ public class UserController {
             @ApiResponse(code = 200, message = "Successfully fetched account"),
             @ApiResponse(code = 404, message = "Account doesn't exist")
     })
-    public ResponseEntity<UserDTO> findById(@PathVariable("id") Long id) {
+    public ResponseEntity<ProfileDTO> findById(@PathVariable("id") Long id) {
 
         return ResponseEntity.ok(userService.findById(id));
     }
@@ -61,9 +62,9 @@ public class UserController {
             @ApiResponse(code = 201, message = "Successfully created account"),
             @ApiResponse(code = 400, message = "Validation failed, invalid model provided")
     })
-    public ResponseEntity<UserDTO> create(@Valid @RequestBody RegistrationDTO registration) {
+    public ResponseEntity<ProfileDTO> create(@Valid @RequestBody RegistrationDTO registration) {
 
-        UserDTO user = userService.create(registration);
+        ProfileDTO user = userService.create(registration);
 
         URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
                 .buildAndExpand(user.getId()).toUri();
@@ -81,7 +82,7 @@ public class UserController {
             @ApiResponse(code = 401, message = "Unauthenticated access, authentication required"),
             @ApiResponse(code = 403, message = "Missing privileges, access denied")
     })
-    public ResponseEntity<UserDTO> updateById(@PathVariable("id") Long id, @Valid @RequestBody UserUpdateDTO update) {
+    public ResponseEntity<ProfileDTO> updateById(@PathVariable("id") Long id, @Valid @RequestBody UserUpdateDTO update) {
 
         return ResponseEntity.ok(userService.updateById(id, update));
     }

@@ -6,6 +6,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.x1c1b.poll4u.dto.ProfileDTO;
 import org.x1c1b.poll4u.dto.RegistrationDTO;
 import org.x1c1b.poll4u.dto.UserDTO;
 import org.x1c1b.poll4u.dto.UserUpdateDTO;
@@ -44,42 +45,42 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<UserDTO> findAll() {
+    public List<ProfileDTO> findAll() {
 
         return StreamSupport.stream(userRepository.findAll().spliterator(), false)
-                .map(user -> userMapper.map(user))
+                .map(user -> userMapper.mapProfile(user))
                 .collect(Collectors.toList());
     }
 
     @Override
-    public Page<UserDTO> findAll(Pageable pageable) {
+    public Page<ProfileDTO> findAll(Pageable pageable) {
 
-        return userRepository.findAll(pageable).map((user) -> userMapper.map(user));
+        return userRepository.findAll(pageable).map((user) -> userMapper.mapProfile(user));
     }
 
     @Override
-    public UserDTO findById(Long id) {
+    public ProfileDTO findById(Long id) {
 
-        return userMapper.map(userRepository.findById(id).orElseThrow(
+        return userMapper.mapProfile(userRepository.findById(id).orElseThrow(
                 () -> new ResourceNotFoundException("No user with such identifier found")));
     }
 
     @Override
-    public UserDTO findByUsername(String username) {
+    public ProfileDTO findByUsername(String username) {
 
-        return userMapper.map(userRepository.findByUsername(username).orElseThrow(
+        return userMapper.mapProfile(userRepository.findByUsername(username).orElseThrow(
                 () -> new ResourceNotFoundException("No user with such username found")));
     }
 
     @Override
-    public UserDTO findByEmail(String email) {
+    public ProfileDTO findByEmail(String email) {
 
-        return userMapper.map(userRepository.findByEmail(email).orElseThrow(
+        return userMapper.mapProfile(userRepository.findByEmail(email).orElseThrow(
                 () -> new ResourceNotFoundException("No user with such email found")));
     }
 
     @Override
-    public UserDTO create(RegistrationDTO registration) {
+    public ProfileDTO create(RegistrationDTO registration) {
 
         boolean isNamePresent = userRepository.findByUsername(registration.getUsername()).isPresent();
         boolean isEmailPresent = userRepository.findByEmail(registration.getEmail()).isPresent();
@@ -95,12 +96,12 @@ public class UserServiceImpl implements UserService {
         user.setPassword(passwordEncoder.encode(registration.getPassword()));
         user.setRoles(Collections.singleton(role));
 
-        return userMapper.map(userRepository.save(user));
+        return userMapper.mapProfile(userRepository.save(user));
     }
 
     @Override
     @PreAuthorize("hasRole('ROLE_ADMIN') or @authorization.isAccountOwner(authentication, #id)")
-    public UserDTO updateById(Long id, UserUpdateDTO update) {
+    public ProfileDTO updateById(Long id, UserUpdateDTO update) {
 
         User user = userRepository.findById(id).orElseThrow(
                 () -> new ResourceNotFoundException("No user with such identifier found"));
@@ -119,7 +120,7 @@ public class UserServiceImpl implements UserService {
         user.setPassword(passwordEncoder.encode(update.getPassword()));
         user.setEmail(update.getEmail());
 
-        return userMapper.map(userRepository.save(user));
+        return userMapper.mapProfile(userRepository.save(user));
     }
 
     @Override
