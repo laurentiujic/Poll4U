@@ -14,6 +14,8 @@ import org.x1c1b.poll4u.error.ResourceNotFoundException;
 import org.x1c1b.poll4u.model.User;
 import org.x1c1b.poll4u.repository.RoleRepository;
 import org.x1c1b.poll4u.repository.UserRepository;
+import org.x1c1b.poll4u.repository.VoteRepository;
+import org.x1c1b.poll4u.service.PollService;
 import org.x1c1b.poll4u.service.UserService;
 
 import java.util.Optional;
@@ -26,6 +28,8 @@ import static org.mockito.Mockito.when;
 public class UserServiceImplTest {
 
     @Mock private UserRepository userRepository;
+    @Mock private VoteRepository voteRepository;
+    @Mock private PollService pollService;
     @Mock private RoleRepository roleRepository;
     @Mock private PasswordEncoder passwordEncoder;
     @Mock private UserMapper userMapper;
@@ -35,7 +39,7 @@ public class UserServiceImplTest {
     @Before
     public void setUp() {
 
-        service = new UserServiceImpl(userRepository, roleRepository, passwordEncoder, userMapper);
+        service = new UserServiceImpl(userRepository, roleRepository, voteRepository, pollService, passwordEncoder, userMapper);
     }
 
     @Test(expected = BadRequestException.class)

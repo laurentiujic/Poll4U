@@ -26,4 +26,6 @@ public interface VoteRepository extends PagingAndSortingRepository<Vote, Long> {
     boolean existsByChoiceIdAndUserId(Long choiceId, Long userId);
 
     void deleteByPollId(Long pollId);
+
+    void deleteByUserId(Long userId);
 }

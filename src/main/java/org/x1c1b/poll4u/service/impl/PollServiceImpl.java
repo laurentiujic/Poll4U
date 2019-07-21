@@ -70,7 +70,19 @@ public class PollServiceImpl implements PollService {
     public void deleteById(Long id) {
 
         if(!pollRepository.existsById(id)) throw new ResourceNotFoundException("No poll with such identifier found");
-        voteRepository.deleteByPollId(id);
-        pollRepository.deleteById(id);
+
+        voteRepository.deleteByPollId(id); // Delete all votes for it
+        pollRepository.deleteById(id); // Delete the poll itself
+    }
+
+    @Override
+    @PreAuthorize("hasRole('ROLE_USER')")
+    public void deleteByCreatedBy(Long userId) {
+
+        // Delete votes of all poll created by given user
+        pollRepository.findByCreatedBy(userId).forEach(poll -> {
+
+            deleteById(poll.getId());
+        });
     }
 }

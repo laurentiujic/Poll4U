@@ -11,6 +11,7 @@ import java.util.List;
 @Repository
 public interface PollRepository extends PagingAndSortingRepository<Poll, Long> {
 
+    List<Poll> findByCreatedBy(Long userId);
     Page<Poll> findByCreatedBy(Long userId, Pageable pageable);
     List<Poll> findByIdIn(List<Long> pollIds);
 }

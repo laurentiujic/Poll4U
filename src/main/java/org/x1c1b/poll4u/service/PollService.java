@@ -19,4 +19,5 @@ public interface PollService {
     PollDTO findById(Long id);
     PollDTO create(PollCreationDTO creation);
     void deleteById(Long id);
+    void deleteByCreatedBy(Long userId);
 }

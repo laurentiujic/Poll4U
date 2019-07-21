@@ -15,10 +15,14 @@ import org.x1c1b.poll4u.error.BadRequestException;
 import org.x1c1b.poll4u.error.ResourceNotFoundException;
 import org.x1c1b.poll4u.model.Role;
 import org.x1c1b.poll4u.model.User;
+import org.x1c1b.poll4u.repository.PollRepository;
 import org.x1c1b.poll4u.repository.RoleRepository;
 import org.x1c1b.poll4u.repository.UserRepository;
+import org.x1c1b.poll4u.repository.VoteRepository;
+import org.x1c1b.poll4u.service.PollService;
 import org.x1c1b.poll4u.service.UserService;
 
+import javax.transaction.Transactional;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -28,18 +32,25 @@ import java.util.stream.StreamSupport;
 public class UserServiceImpl implements UserService {
 
     private UserRepository userRepository;
+    private VoteRepository voteRepository;
     private RoleRepository roleRepository;
+
+    private PollService pollService;
     private PasswordEncoder passwordEncoder;
     private UserMapper userMapper;
 
     @Autowired
     public UserServiceImpl(UserRepository userRepository,
                            RoleRepository roleRepository,
+                           VoteRepository voteRepository,
+                           PollService pollService,
                            PasswordEncoder passwordEncoder,
                            UserMapper userMapper) {
 
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
+        this.voteRepository = voteRepository;
+        this.pollService = pollService;
         this.passwordEncoder = passwordEncoder;
         this.userMapper = userMapper;
     }
@@ -125,9 +136,13 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @PreAuthorize("hasRole('ROLE_ADMIN') or @authorization.isAccountOwner(authentication, #id)")
+    @Transactional
     public void deleteById(Long id) {
 
         if(!userRepository.existsById(id)) throw new ResourceNotFoundException("No user with such identifier found");
-        userRepository.deleteById(id);
+
+        voteRepository.deleteByUserId(id); // Delete related votes
+        pollService.deleteByCreatedBy(id); // Delete all created polls
+        userRepository.deleteById(id); // Delete the user itself
     }
 }
