@@ -1,6 +1,7 @@
 package org.x1c1b.poll4u.model;
 
 import org.x1c1b.poll4u.model.audit.UserDateAudit;
+import org.x1c1b.poll4u.model.validation.Future;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -27,6 +28,7 @@ public class Poll extends UserDateAudit {
     private List<Choice> choices;
 
     @NotNull(message = "Expiration date is required")
+    @Future(message = "The expiration date cannot be in the past")
     private Date expiration;
 
     public Poll() {

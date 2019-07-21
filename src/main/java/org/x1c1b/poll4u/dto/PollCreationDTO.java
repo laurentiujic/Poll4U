@@ -2,6 +2,7 @@ package org.x1c1b.poll4u.dto;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import org.x1c1b.poll4u.model.validation.Future;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
@@ -26,6 +27,7 @@ public class PollCreationDTO {
 
     @NotNull(message = "Expiration date is required")
     @ApiModelProperty(value = "Date of poll's expiration")
+    @Future(message = "The expiration date cannot be in the past")
     private Date expiration;
 
     public PollCreationDTO() {
