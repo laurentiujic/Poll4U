@@ -29,15 +29,33 @@ public class UserUpdateDTOTest {
         UserUpdateDTO update = new UserUpdateDTO();
         Set<ConstraintViolation<UserUpdateDTO>> violations = validator.validate(update);
 
-        assertEquals(4, violations.size());
+        assertEquals(0, violations.size());
     }
 
     @Test public void validateWithValidFields() {
 
         UserUpdateDTO update = new UserUpdateDTO();
-        update.setId(1L);
-        update.setUsername("user");
         update.setEmail("user@web.de");
+        update.setPassword("Abc123");
+
+        Set<ConstraintViolation<UserUpdateDTO>> violations = validator.validate(update);
+
+        assertEquals(0, violations.size());
+    }
+
+    @Test public void validateWithoutOptionalPassword() {
+
+        UserUpdateDTO update = new UserUpdateDTO();
+        update.setEmail("user@web.de");
+
+        Set<ConstraintViolation<UserUpdateDTO>> violations = validator.validate(update);
+
+        assertEquals(0, violations.size());
+    }
+
+    @Test public void validateWithoutOptionalEmail() {
+
+        UserUpdateDTO update = new UserUpdateDTO();
         update.setPassword("Abc123");
 
         Set<ConstraintViolation<UserUpdateDTO>> violations = validator.validate(update);
@@ -48,35 +66,7 @@ public class UserUpdateDTOTest {
     @Test public void validateWithMalformedEmail() {
 
         UserUpdateDTO update = new UserUpdateDTO();
-        update.setId(1L);
-        update.setUsername("user");
         update.setEmail("invalid");
-        update.setPassword("Abc123");
-
-        Set<ConstraintViolation<UserUpdateDTO>> violations = validator.validate(update);
-
-        assertEquals(1, violations.size());
-    }
-
-    @Test public void validateWithToShortUsername() {
-
-        UserUpdateDTO update = new UserUpdateDTO();
-        update.setId(1L);
-        update.setUsername(RandomStringUtils.random(2));
-        update.setEmail("user@web.de");
-        update.setPassword("Abc123");
-
-        Set<ConstraintViolation<UserUpdateDTO>> violations = validator.validate(update);
-
-        assertEquals(1, violations.size());
-    }
-
-    @Test public void validateWithToLongUsername() {
-
-        UserUpdateDTO update = new UserUpdateDTO();
-        update.setId(1L);
-        update.setUsername(RandomStringUtils.random(20));
-        update.setEmail("user@web.de");
         update.setPassword("Abc123");
 
         Set<ConstraintViolation<UserUpdateDTO>> violations = validator.validate(update);
@@ -87,22 +77,8 @@ public class UserUpdateDTOTest {
     @Test public void validateWithMalformedPassword() {
 
         UserUpdateDTO update = new UserUpdateDTO();
-        update.setId(1L);
-        update.setUsername("user");
         update.setEmail("user@web.de");
         update.setPassword("abcdefg");
-
-        Set<ConstraintViolation<UserUpdateDTO>> violations = validator.validate(update);
-
-        assertEquals(1, violations.size());
-    }
-
-    @Test public void validateWithoutId() {
-
-        UserUpdateDTO update = new UserUpdateDTO();
-        update.setUsername("user");
-        update.setEmail("user@web.de");
-        update.setPassword("Abc123");
 
         Set<ConstraintViolation<UserUpdateDTO>> violations = validator.validate(update);
 

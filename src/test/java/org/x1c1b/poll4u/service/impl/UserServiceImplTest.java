@@ -73,9 +73,7 @@ public class UserServiceImplTest {
     public void updateWithExistingEmail() {
 
         UserUpdateDTO update = new UserUpdateDTO();
-        update.setId(1L);
-        update.setUsername("user");
-        update.setUsername("user@web.de");
+        update.setEmail("user@web.de");
         update.setPassword("Abc123");
 
         when(userRepository.findById(any())).thenReturn(Optional.of(new User()));
@@ -88,9 +86,7 @@ public class UserServiceImplTest {
     public void updateNonExisting() {
 
         UserUpdateDTO update = new UserUpdateDTO();
-        update.setId(1L);
-        update.setUsername("user");
-        update.setUsername("user@web.de");
+        update.setEmail("user@web.de");
         update.setPassword("Abc123");
 
         when(userRepository.findById(any())).thenReturn(Optional.empty());

@@ -2,9 +2,9 @@ package org.x1c1b.poll4u.dto;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import org.x1c1b.poll4u.model.validation.Future;
 
 import javax.validation.Valid;
+import javax.validation.constraints.Future;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.util.ArrayList;
@@ -21,9 +21,8 @@ public class PollCreationDTO {
 
     @NotNull(message = "Choices are required")
     @Size(min = 2, max = 6, message = "Only between 2 and 6 choice options are possible")
-    @Valid
     @ApiModelProperty(value = "Poll related choices for answering the question")
-    private List<ChoiceCreationDTO> choices;
+    private List<@Valid ChoiceCreationDTO> choices;
 
     @NotNull(message = "Expiration date is required")
     @ApiModelProperty(value = "Date of poll's expiration")

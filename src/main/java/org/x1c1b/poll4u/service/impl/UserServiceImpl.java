@@ -117,19 +117,23 @@ public class UserServiceImpl implements UserService {
         User user = userRepository.findById(id).orElseThrow(
                 () -> new ResourceNotFoundException("No user with such identifier found"));
 
-        boolean isEmailPresent = userRepository.findByEmail(update.getEmail()).isPresent();
-        if(isEmailPresent) throw new BadRequestException("Email is already in use");
-
         /*
         "Be strict in what you produces and be tolerant in what you consumes", ignore additional
         fields of entity. Just update partially the updatable fields.
          */
 
-        if(!user.getId().equals(update.getId())) throw new BadRequestException("Identifier isn't mutable");
-        if(!user.getUsername().equals(update.getUsername())) throw new BadRequestException("Username isn't mutable");
+        if(update.getEmail().isPresent()) { // Update email if present
 
-        user.setPassword(passwordEncoder.encode(update.getPassword()));
-        user.setEmail(update.getEmail());
+            boolean isEmailPresent = userRepository.findByEmail(update.getEmail().get()).isPresent();
+            if(isEmailPresent) throw new BadRequestException("Email is already in use");
+
+            user.setEmail(update.getEmail().get());
+        }
+
+        if(update.getPassword().isPresent()) { // Update password if present
+
+            user.setPassword(passwordEncoder.encode(update.getPassword().get()));
+        }
 
         return userMapper.mapProfile(userRepository.save(user));
     }

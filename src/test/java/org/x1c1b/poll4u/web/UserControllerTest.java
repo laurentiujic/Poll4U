@@ -97,7 +97,7 @@ public class UserControllerTest {
     public void updateById() throws Exception {
 
         ProfileDTO user = new ProfileDTO(1L, "user");
-        UserUpdateDTO update = new UserUpdateDTO(1L, "user","user@web.de", "Abc123");
+        UserUpdateDTO update = new UserUpdateDTO("user@web.de", "Abc123");
 
         given(userService.updateById(eq(1L), any())).willReturn(user);
 

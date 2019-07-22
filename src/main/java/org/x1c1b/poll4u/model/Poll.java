@@ -1,9 +1,9 @@
 package org.x1c1b.poll4u.model;
 
 import org.x1c1b.poll4u.model.audit.UserDateAudit;
-import org.x1c1b.poll4u.model.validation.Future;
 
 import javax.persistence.*;
+import javax.validation.constraints.Future;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.util.ArrayList;
