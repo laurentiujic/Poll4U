@@ -91,7 +91,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public ProfileDTO create(RegistrationDTO registration) {
+    public UserDTO create(RegistrationDTO registration) {
 
         boolean isNamePresent = userRepository.findByUsername(registration.getUsername()).isPresent();
         boolean isEmailPresent = userRepository.findByEmail(registration.getEmail()).isPresent();
@@ -107,12 +107,12 @@ public class UserServiceImpl implements UserService {
         user.setPassword(passwordEncoder.encode(registration.getPassword()));
         user.setRoles(Collections.singleton(role));
 
-        return userMapper.mapProfile(userRepository.save(user));
+        return userMapper.mapUser(userRepository.save(user));
     }
 
     @Override
     @PreAuthorize("hasRole('ROLE_ADMIN') or @authorization.isAccountOwner(authentication, #id)")
-    public ProfileDTO updateById(Long id, UserUpdateDTO update) {
+    public UserDTO updateById(Long id, UserUpdateDTO update) {
 
         User user = userRepository.findById(id).orElseThrow(
                 () -> new ResourceNotFoundException("No user with such identifier found"));
@@ -135,7 +135,7 @@ public class UserServiceImpl implements UserService {
             user.setPassword(passwordEncoder.encode(update.getPassword().get()));
         }
 
-        return userMapper.mapProfile(userRepository.save(user));
+        return userMapper.mapUser(userRepository.save(user));
     }
 
     @Override

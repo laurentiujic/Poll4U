@@ -16,7 +16,7 @@ public interface UserService {
     ProfileDTO findById(Long id);
     ProfileDTO findByUsername(String username);
     ProfileDTO findByEmail(String email);
-    ProfileDTO create(RegistrationDTO registration);
-    ProfileDTO updateById(Long id, UserUpdateDTO update);
+    UserDTO create(RegistrationDTO registration);
+    UserDTO updateById(Long id, UserUpdateDTO update);
     void deleteById(Long id);
 }

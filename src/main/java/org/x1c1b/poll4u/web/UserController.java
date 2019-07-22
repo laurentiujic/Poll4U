@@ -62,9 +62,9 @@ public class UserController {
             @ApiResponse(code = 201, message = "Successfully created account"),
             @ApiResponse(code = 400, message = "Validation failed, invalid model provided")
     })
-    public ResponseEntity<ProfileDTO> create(@Valid @RequestBody RegistrationDTO registration) {
+    public ResponseEntity<UserDTO> create(@Valid @RequestBody RegistrationDTO registration) {
 
-        ProfileDTO user = userService.create(registration);
+        UserDTO user = userService.create(registration);
 
         URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
                 .buildAndExpand(user.getId()).toUri();
@@ -82,7 +82,7 @@ public class UserController {
             @ApiResponse(code = 401, message = "Unauthenticated access, authentication required"),
             @ApiResponse(code = 403, message = "Missing privileges, access denied")
     })
-    public ResponseEntity<ProfileDTO> updateById(@PathVariable("id") Long id, @Valid @RequestBody UserUpdateDTO update) {
+    public ResponseEntity<UserDTO> updateById(@PathVariable("id") Long id, @Valid @RequestBody UserUpdateDTO update) {
 
         return ResponseEntity.ok(userService.updateById(id, update));
     }

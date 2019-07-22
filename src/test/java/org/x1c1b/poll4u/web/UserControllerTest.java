@@ -77,7 +77,7 @@ public class UserControllerTest {
 
     @Test public void create() throws Exception {
 
-        ProfileDTO user = new ProfileDTO(1L, "user");
+        UserDTO user = new UserDTO(1L, "user", "user@web.de");
         RegistrationDTO registration = new RegistrationDTO("user","user@web.de", "Abc123");
 
         given(userService.create(any())).willReturn(user);
@@ -96,7 +96,7 @@ public class UserControllerTest {
     @WithMockUserDetails
     public void updateById() throws Exception {
 
-        ProfileDTO user = new ProfileDTO(1L, "user");
+        UserDTO user = new UserDTO(1L, "user", "user@web.de");
         UserUpdateDTO update = new UserUpdateDTO("user@web.de", "Abc123");
 
         given(userService.updateById(eq(1L), any())).willReturn(user);
