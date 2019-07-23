@@ -38,7 +38,7 @@ public class UserUpdateDTO {
     }
 
     public Optional<@Size(max = 100, message = "Should contains not more than 100 characters")
-            @Pattern(regexp = "^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d]{6,}$", message = "Should contains minimum 6 characters and at least one letter and one number")
+            @Pattern(regexp = "^(?=.*[A-Za-z])(?=.*[0-9[^A-Za-z0-9]]).{6,100}$", message = "Should contains minimum 6 characters and at least one letter and one number")
             String> getPassword() {
 
         return Optional.ofNullable(password);
