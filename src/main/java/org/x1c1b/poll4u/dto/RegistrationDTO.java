@@ -24,7 +24,7 @@ public class RegistrationDTO {
 
     @NotNull(message = "Password is required")
     @Size(max = 100, message = "Should contains not more than 100 characters")
-    @Pattern(regexp = "^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d]{6,}$",
+    @Pattern(regexp = "^(?=.*[A-Za-z])(?=.*[0-9[^A-Za-z0-9]]).{6,100}$",
             message = "Should contains minimum 6 characters and at least one letter and one number")
     @ApiModelProperty(value = "Password used for authentication")
     private String password;
